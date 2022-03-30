@@ -14,10 +14,10 @@
 #include <future>
 #include <iostream>
 
-double g_global = 100.0;
-double g_globalK = 1.0;
-int countK = 0;
-int last_global = 0;
+int g_lastFitnessResult = 0;
+double g_currentFitnessResult = 100.0;
+double g_additionalKoeff = 1.0;
+int g_stableFitnessResultCount = 0;
 
 namespace crsGA
 {
@@ -183,25 +183,25 @@ class GeneticAlgorithm : public SelectionPolicy, public CrossoverPolicy, public 
             std::cout << simulationTime << "\t" << _population.getFittestChromosome().getFitness();
             step(simulationTime);
             std::cout << " - " << _population.getFittestChromosome() << std::endl;
-            g_global = _population.getFittestChromosome().getFitness();
-            if (last_global == (int)g_global)
+            g_currentFitnessResult = _population.getFittestChromosome().getFitness();
+            if (g_lastFitnessResult == (int)g_currentFitnessResult)
             {
-                countK++;
-                if (countK % 50 == 0)
-                    g_globalK*=1.01;
+                g_stableFitnessResultCount++;
+                if (g_stableFitnessResultCount % 50 == 0)
+                    g_additionalKoeff*=1.01;
             }
             else
             {
-                last_global = (int)g_global;
-                while (countK > 0)
+                g_lastFitnessResult = (int)g_currentFitnessResult;
+                while (g_stableFitnessResultCount > 0)
                 {
-                    if (countK % 50 == 0)
-                        g_globalK/=1.01;
-                    countK--;
+                    if (g_stableFitnessResultCount % 50 == 0)
+                        g_additionalKoeff/=1.01;
+                    g_stableFitnessResultCount--;
                 }
             }
 
-            std::cout << "countK: " << countK << " g_globalK:" << g_globalK << " = " << g_global * g_globalK / 10.0 << std::endl;
+            std::cout << "Stable Fitness Result Count: " << g_stableFitnessResultCount << " Additional Koeff: " << g_additionalKoeff << " = " << g_additionalKoeff << std::endl;
 
             if (simulationTime >= maxDuration)
             {

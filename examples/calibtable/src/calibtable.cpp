@@ -11,7 +11,9 @@ std::shared_ptr<calib_table> m_table;
 float computeProbability()
 {
     std::random_device rd;
-    std::uniform_real_distribution<float> distribution(-g_global * g_globalK / 100.0, g_global * g_globalK / 100.0);
+    std::uniform_real_distribution<float> distribution(
+                -g_currentFitnessResult * g_additionalKoeff / 100.0,
+                g_currentFitnessResult * g_additionalKoeff / 100.0);
     std::mt19937 engine(rd()); // Mersenne twister MT19937
 
     return distribution(engine);
@@ -44,7 +46,7 @@ class Gen : public crsGA::IGen
         else if (index >= 10 && index <= 14)
             coefficient += 27.0 * computeProbability();
         else if (index >= 15)
-            coefficient += 27.0 * 3 * computeProbability();
+            coefficient += 81.0 * computeProbability();
     }
     // Random creation, used for initialization
     virtual void random(const crsGA::UserData *) override
@@ -224,6 +226,6 @@ int main(int, char **)
     ga.setMutationFactor(mutationFactor);
     ga.reset();
     // run up to 100 seconds
-    ga.run(100000.0);
+    ga.run(100.0);
     return 0;
 }
