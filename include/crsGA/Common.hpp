@@ -20,7 +20,7 @@ class IGen
 {
   public:
     virtual ~IGen() {}
-    virtual void mutate(const UserData *,int) = 0; // changes its state
+    virtual void mutate(const UserData *,int index) = 0; // changes its state
     virtual void random(const UserData *) = 0; // random initialization
 };
 

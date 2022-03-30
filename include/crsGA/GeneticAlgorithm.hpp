@@ -184,6 +184,8 @@ class GeneticAlgorithm : public SelectionPolicy, public CrossoverPolicy, public 
             step(simulationTime);
             std::cout << " - " << _population.getFittestChromosome() << std::endl;
             g_currentFitnessResult = _population.getFittestChromosome().getFitness();
+
+            // Algorithm to change additional coeff
             if (g_lastFitnessResult == (int)g_currentFitnessResult)
             {
                 g_stableFitnessResultCount++;
